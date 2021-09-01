@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>wx</title>
+  </head>
+  <body>
+    test
+  </body>
+  <script src="./util.js"></script>
+  <script src="./reactive.js"></script>
+  <script src="./ref.js"></script>
+  <script>
+    // ----------------------------------------- reactive -----------------------------------------
+    // reactive
+    const state = reactive({ a: 1, b: { c: 2 } })
+    state.a = 2
+    state.b.c = 3
+    console.log('state-----', state)
+    // readOnly
+    const stateReadOnly = readonly({ a: 1, b: { c: 2 } })
+    stateReadOnly.a = 2
+    stateReadOnly.b.c = 3
+    console.log('stateReadOnly----', stateReadOnly)
+    // shallowReadonly
+    const stateShallowReadonly = shallowReadonly({ a: 1, b: { c: 2 } })
+    stateShallowReadonly.a = 2
+    stateShallowReadonly.b.c = 3
+    console.log('stateShallowReadonly----', stateShallowReadonly)
+    // shallowReactive
+    const stateShallowReactive = shallowReactive({ a: 1, b: { c: 2 } })
+    stateShallowReactive.a = 2
+    stateShallowReactive.b.c = 3
+    console.log('stateShallowReactive----', stateShallowReactive)
+    // isReactive
+    console.log('isReactive---', isReactive(state))
+    console.log('isReactive---', isReactive(stateReadOnly))
+    console.log('isReactive---', isReactive(stateShallowReadonly))
+    console.log('isReactive---', isReactive(stateShallowReactive))
+    // isReadonly
+    console.log('isReadonly:', isReadonly(state))
+    console.log('isReadonly:', isReadonly(stateReadOnly))
+    console.log('isReadonly:', isReadonly(stateShallowReadonly))
+    console.log('isReadonly:', isReadonly(stateShallowReactive))
+    // isProxy
+    console.log('isProxy===>', isProxy(state))
+    console.log('isProxy===>', isProxy(stateReadOnly))
+    console.log('isProxy===>', isProxy(stateShallowReadonly))
+    console.log('isProxy===>', isProxy(stateShallowReactive))
+    // toRaw
+    const raw = { a: 1 }
+    const rawReactiveState = reactive(raw)
+    const rawReadState = readonly(raw)
+    const toRawReactiveState = toRaw(rawReactiveState)
+    const toRawReadState = toRaw(rawReadState)
+    console.log('toRaw', raw === rawReactiveState)
+    console.log('toRaw', raw === rawReadState)
+    console.log('toRaw', raw === toRawReactiveState)
+    console.log('toRaw', raw === toRawReadState)
+    // markRaw
+    const foo = markRaw({})
+    console.log('foo------', foo)
+    console.log('markRaw', isReactive(reactive(foo))) // false
+    // ----------------------------------------- reactive -----------------------------------------
+
+    // ----------------------------------------- ref -----------------------------------------
+    // ref
+    const test1 = ref(1)
+    console.log('test1----',  test1)
+    // isRef
+    console.log('isRef----', isRef(test1), isRef(state))
+    // unref
+    console.log('unref-----', unref(test1), unref('a'))
+    // toref
+    const test2 = reactive({ foo: 1, bar: 2 })
+    const fooRef = toRef(test2, 'foo')
+    fooRef.value++
+    console.log('foo-----', test2.foo) // 2
+    test2.foo++
+    console.log('foo-----', fooRef.value) // 3 
+    // toRefs
+    const test2Refs = toRefs(test2)
+    console.log('test2Refs------', test2Refs)
+    // customRef
+    let timeout
+    const test = customRef(() => {
+      return {
+        get() {
+          return 123
+        },
+        set(newValue) {
+          clearTimeout(timeout)
+          timeout = setTimeout(() => {
+            console.log('timeout')
+            value = newValue
+          }, 1000)
+        }
+      }
+    })
+    console.log('test---', test.value)
+    test.value = 1
+    // shallowRef
+    const too = shallowRef({})
+    too.value = { a: 1 }
+    console.log('too------------------------', too.value)
+    console.log('too------------------------', isReactive(too))
+    console.log('too------------------------', isReactive(too.value)) // false
+    // ----------------------------------------- ref -----------------------------------------
+  </script>
+</html>
