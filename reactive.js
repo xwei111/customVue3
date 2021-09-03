@@ -17,6 +17,8 @@ const shallowReactiveMap = new WeakMap()
 function targetTypeMap(rawType) {
   switch (rawType) {
     case 'Object':
+    case 'Array':
+      return TargetType.COMMON
     case 'Map':
     case 'Set':
     case 'WeakMap':
