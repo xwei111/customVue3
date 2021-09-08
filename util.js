@@ -23,3 +23,9 @@ const isArray = Array.isArray
 const hasOwnProperty = Object.prototype.hasOwnProperty
 
 const hasOwn = (val, key) => hasOwnProperty.call(val, key)
+
+const extend = Object.assign
+
+const isFunction = val => typeof val === 'function'
+
+const NOOP = () => {}

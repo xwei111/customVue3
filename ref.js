@@ -1,6 +1,21 @@
 // 若为对象走reactive
 const convert = val => isObject(val) ? reactive(val) : val
 
+function trackRefValue(ref) {
+  if(isTracking()) {
+    ref = toRaw(ref)
+    if(!ref.dep) {
+      ref.dep = createDep()
+    }
+    trackEffects(ref.dep)
+  }
+}
+
+function triggerRefValue(ref) {
+  ref = toRaw(ref)
+  if(ref.dep) triggerEffects(ref.dep)
+}
+
 class RefImpl {
   constructor(value, shallow) {
     this.__v_isRef = true
@@ -10,6 +25,7 @@ class RefImpl {
   }
 
   get value() {
+    trackRefValue(this)
     return this._value
   }
 
@@ -18,6 +34,7 @@ class RefImpl {
     if(hasChanged(newValue, this._rawValue)) {
       this._rawValue = newValue;
       this._value = this._shallow ? newValue : convert(newValue)
+      triggerRefValue(this)
     }
   }
 }
@@ -40,7 +57,10 @@ class ObjectRefImpl {
 
 class CustomRefImpl {
   constructor(factory) {
-    const { get, set } = factory()
+    const { get, set } = factory(
+      () => trackRefValue(this),
+      () => triggerRefValue(this)
+    )
     this._get = get
     this._set = set
   }

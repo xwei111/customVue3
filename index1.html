@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>wx</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="app1"></div>
+    <button id="add">++</button>
+    <button id="mult">--</button>
+  </body>
+  <script src="./util.js"></script>
+  <script src="./effect.js"></script>
+  <script src="./reactive.js"></script>
+  <script src="./ref.js"></script>
+  <script>
+
+    const state = reactive({ a: 100 })
+    const test = ref(1)
+
+    // 初始化执行
+    const test1111 = effect(
+      () => {
+        document.getElementById('app').innerText = test.value
+        document.getElementById('app1').innerText = state.a
+      },
+      // 自定义scheduler
+      // {
+      //   scheduler: () => setTimeout(() => document.getElementById('app').innerText = test.value, 0)
+      // }
+    )
+
+    console.log('test1111------', test1111)
+     
+    document.getElementById('add').addEventListener('click', () => test.value++)
+    document.getElementById('mult').addEventListener('click', () => state.a--)
+    
+  </script>
+</html>

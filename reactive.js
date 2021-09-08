@@ -59,6 +59,7 @@ function createGetter(isReadOnly = false, shallow = false) {
     if (shallow) return result
     // 若为对象，深度处理
     if(isObject(result)) return isReadOnly ? readonly(result) : reactive(result)
+    if(!isReadOnly) track(target, 'get', key)
     
     return result
   }
@@ -66,8 +67,21 @@ function createGetter(isReadOnly = false, shallow = false) {
 
 function createSetter() {
   return function set(target, key, value, receiver) {
-    console.log(`${key}发生了改变`)
+    let oldValue = target[key]
+    // 是否存在属性
+    const hadKey = hasOwn(target, key)
     const result = Reflect.set(target, key, value, receiver)
+    // 这里只考虑添加属性，不考虑修改等操作，具体查看源码
+    if (target === toRaw(receiver)) {
+      if (!hadKey) {
+        // 不存在则为新增
+        trigger(target, 'add', key, value)
+      } else if (hasChanged(value, oldValue)) {
+        // 存在则为修改
+        trigger(target, 'set', key, value, oldValue)
+      }
+    }
+
     return result
   }
 }

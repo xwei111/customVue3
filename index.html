@@ -108,5 +108,10 @@
     console.log('too------------------------', isReactive(too))
     console.log('too------------------------', isReactive(too.value)) // false
     // ----------------------------------------- ref -----------------------------------------
+  
+    let trackOpBit = 1
+    let dep = { n: 0 }
+    console.log('1---------------', (dep.n & trackOpBit))
+    // dep.n |= trackOpBit
   </script>
 </html>
