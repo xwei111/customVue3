@@ -6,6 +6,7 @@ class ComputedRefImpl{
   _dirty = true
   effect = null
   __v_isRef = true
+  __v_isReadonly = false
 
   constructor(getter, _setter, isReadonly = false) {
     this.effect = new ReactiveEffect(getter, () => {
@@ -13,11 +14,13 @@ class ComputedRefImpl{
         this._dirty = true
       }
     })
+    this._setter = _setter
     this.__v_isReadonly = isReadonly
   }
 
   get value() {
     const self = toRaw(this)
+    trackRefValue(self)
     if (self._dirty) {
       self._dirty = false
       self._value = self.effect.run()
@@ -30,6 +33,7 @@ class ComputedRefImpl{
   }
 }
 
+// getterOrOptions: Function | { get: Function, set: Function }
 function computed(getterOrOptions) {
   let getter
   let setter
