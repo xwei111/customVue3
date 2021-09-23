@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>wx</title>
+  </head>
+  <body>
+  </body>
+  <script src="./util.js"></script>
+  <script src="./effect.js"></script>
+  <script src="./reactive.js"></script>
+  <script src="./ref.js"></script>
+  <script src="./watch.js"></script>
+  <script>
+    const a = ref(1)
+
+    watch(
+      a,
+      (newVal, oldVal, onInvalidate) => {
+        console.log('newVal---', newVal)
+        console.log('oldVal---', oldVal)
+        onInvalidate(() => console.log('watch---清除副作用'))
+      }
+    )
+
+    // watchEffect((onInvalidate) => {
+    //   console.log('effect---', a.value)
+    //   onInvalidate(() => console.log('watchEffect---清除副作用'))
+    // })
+
+    setTimeout(() => a.value = 123, 0)
+    setTimeout(() => a.value = 456, 1000)
+
+  </script>
+</html>
