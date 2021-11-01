@@ -1,7 +1,6 @@
 
 class ComputedRefImpl{
 
-  dep = undefined
   _value = null
   _dirty = true
   effect = null

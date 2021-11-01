@@ -75,10 +75,10 @@ function createSetter() {
     if (target === toRaw(receiver)) {
       if (!hadKey) {
         // 不存在则为新增
-        trigger(target, 'add', key, value)
+        trigger(target, key)
       } else if (hasChanged(value, oldValue)) {
         // 存在则为修改
-        trigger(target, 'set', key, value, oldValue)
+        trigger(target, key)
       }
     }
 

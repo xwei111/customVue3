@@ -18,6 +18,7 @@ function triggerRefValue(ref) {
 
 class RefImpl {
   constructor(value, shallow) {
+    // 作为判断是否为ref的依据
     this.__v_isRef = true
     this._rawValue = shallow ? value : toRaw(value)
     this._value = shallow ? value : convert(value)

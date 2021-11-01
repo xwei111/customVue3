@@ -76,9 +76,7 @@ function doWatch(
     if(cb) {
       const newValue = effect.run()
       // 副作用即将重新执行时清除副作用
-      if (cleanup) {
-        cleanup()
-      }
+      cleanup && cleanup()
       callWithAsyncErrorHandling(cb, [
         newValue,
         oldValue,
@@ -101,6 +99,7 @@ function doWatch(
   }
 
   return () => {
+    // 手动清除时同时会触发副作用的清除 => effect.onStop
     effect.stop()
   }
 }

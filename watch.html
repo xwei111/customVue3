@@ -21,6 +21,7 @@
       (newVal, oldVal, onInvalidate) => {
         console.log('newVal---', newVal)
         console.log('oldVal---', oldVal)
+        // 执行时注册了cleanup，在此执行时cleanup存在便可执行，这里符合文档描述的执行时机
         onInvalidate(() => console.log('watch---清除副作用'))
       }
     )

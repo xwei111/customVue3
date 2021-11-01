@@ -10,6 +10,7 @@
     test
   </body>
   <script src="./util.js"></script>
+  <script src="./effect.js"></script>
   <script src="./reactive.js"></script>
   <script src="./ref.js"></script>
   <script>
@@ -85,16 +86,18 @@
     console.log('test2Refs------', test2Refs)
     // customRef
     let timeout
+    let value
     const test = customRef(() => {
       return {
         get() {
-          return 123
+          return value
         },
         set(newValue) {
           clearTimeout(timeout)
           timeout = setTimeout(() => {
-            console.log('timeout')
+            console.log('timeout1', value)
             value = newValue
+            console.log('timeout2', value)
           }, 1000)
         }
       }
